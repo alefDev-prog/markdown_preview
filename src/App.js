@@ -1,23 +1,29 @@
-import logo from './logo.svg';
 import './App.css';
+import { useSelector, useDispatch } from 'react-redux';
+import {useEffect} from 'react';
+import { addText } from './redux/textSlice';
+import { marked } from 'marked';
 
 function App() {
+  const dispatch = useDispatch();
+  const {text} = useSelector((state) => state.editText)
+  const output = marked.parse(text)
+  console.log(output);
+
+  function middleMan() {
+    let myTextarea = document.getElementById("editor");
+    dispatch(addText(myTextarea.value));
+  }
+
+  
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <textarea id="editor" onChange={middleMan} defaultValue= {text} />
+
+      <div id= "preview" dangerouslySetInnerHTML={{__html: output}}> 
+        
+      </div>
     </div>
   );
 }
